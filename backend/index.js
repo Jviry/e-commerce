@@ -9,7 +9,7 @@ app.use(express.json());
 apiController(app);
 
 app.listen(PORT, () =>{
-  console.log('Server runnin at ${PORT}');
+  console.log(`Server runnin at ${PORT}`);
 });
 
 

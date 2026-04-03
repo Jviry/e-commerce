@@ -1,7 +1,9 @@
 import { pool } from '../db.js';
+import dotenv from 'dotenv';
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
 import express from 'express';
+import { authenticate }  from '../middleware/authenticate.middleware.js';
 
 dotenv.config();
 
@@ -15,7 +17,7 @@ router.post('/signup', async (req, res) =>{
     const hashedPassword = await bcrypt.hash(password, 10);
 
     const result = await pool.query(
-      'INSERT INTO users(username, email, password) VALUES($1, $2, $3) RETURNING * ',
+      'INSERT INTO public.users(username, email, password) VALUES($1, $2, $3) RETURNING * ',
       [username, email, hashedPassword]
     );
     
@@ -31,20 +33,20 @@ router.post('/signup', async (req, res) =>{
 
 router.post('/login', async (req, res) =>{
   try{
-    const{ username, password } = req.body;
+    const{ email, password } = req.body;
 
     const userResult = await pool.query(
-      'SELECT * FROM user WHERE username = $1',
-      [username]
+      'SELECT * FROM users WHERE email = $1',
+      [email]
     );
 
     if(userResult.rows.length === 0){
-      return res.status(400).json('Invalid username');
+      return res.status(400).json('Invalid email');
     }
     
     const user = userResult.rows[0];
     
-    const isMatch = bcrypt.compare(password, user.password);
+    const isMatch = await bcrypt.compare(password, user.password);
     if(!isMatch){
       return res.status(400).json('Invalid password');
     }
@@ -65,6 +67,8 @@ router.post('/login', async (req, res) =>{
 
 });
 
-router.post('/logout', async (req, res) =>{
-
+router.post('/logout', authenticate , async (req, res) =>{
+  res.status(200).json('Logged out succesfully');
 });
+
+export default router;

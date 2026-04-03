@@ -5,7 +5,7 @@ dotenv.config();
 
 const { Pool } = pkg;
 
-const pool = new Pool({
+export const pool = new Pool({
   host: 'db.ywxjsfdcwefammatagiw.supabase.co',
   port: 5432,
   database: 'postgres',
@@ -17,5 +17,3 @@ const pool = new Pool({
 });
 
 
-
-export default pool;
