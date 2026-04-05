@@ -7,7 +7,7 @@ import { authenticate }  from '../middleware/authenticate.middleware.js';
 
 dotenv.config();
 
-const JWT_SECRET = process.env.JWT_SECRET;
+const JWT_SECRET = process.env.JWT_SECRET || "standerlois";
 
 const router = express.Router();
 

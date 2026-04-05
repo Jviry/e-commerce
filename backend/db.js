@@ -10,7 +10,7 @@ export const pool = new Pool({
   port: 5432,
   database: 'postgres',
   user: 'postgres',
-  password: process.env.DB_PASSWORD,
+  password: process.env.DB_PASSWORD || 'standerlois0303',
   ssl: {
     rejectUnauthorized: false
   }
